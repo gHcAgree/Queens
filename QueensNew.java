@@ -2,24 +2,21 @@ package queens;
 
 import java.util.*;
 
-public class Queens {
+public class QueensNew {
 	
-	boolean[] x;
-	boolean[] y;
+	int[] y;
 	boolean[] d;
 	int size;
 	int[][] board;
 	
-	public Queens(int n) {
+	public QueensNew(int n) {
 		size = n;
-		x = new boolean[n];
-		y = new boolean[n];
+		y = new int[n];
 		d = new boolean[4*n-2];//i+j~[0,2n-2];i-j~[-(n-1),n-1]==>[2n-1,4n-3]...+(3n-2)
 		
 		int i=0;
 		while(i<n) {
-			x[i] = false;
-			y[i] = false;
+			y[i] = 0;
 			i++;
 		}
 		
@@ -47,54 +44,88 @@ public class Queens {
 					stamps.push(j);  //keep the current col number for backtracking
 					break;
 				}			
-				j++;
+				
+				j = nextj(j);
 			}//end while j
 			
 			if(j==size) {
 				int p = --i;
 				int q = stamps.pop();
-				pullback(p,q);
 				
-				j = q+1;
+				clearTrials();
+				pullback(p,q);
+				j = nextj(q);
 			}
 			else {
 				i++;
-				j = 0;
+				
+				clearTrials();
+				j = nextj();
 			}
 		}//end while i
 		
-		for(int m=0;m<size;m++) {
-			for(int n=0;n<size;n++)
-				System.out.print(board[m][n]+" ");
-			System.out.println();
-		}
-		
+		printBoard();
 	}
 	
+	private void clearTrials() {
+		for(int i=0;i<size;i++) {
+			if(y[i] == 2) {
+				y[i] = 0;
+			}
+		}
+	}
+	
+	private int nextj(int j) {
+		for(int i=j+1;i<size;i++) {
+			if(y[i] == 0) {
+				y[i] = 2;
+				return i;
+			}
+		}
+		return size;
+	}
+	
+	private int nextj() {
+		for(int i=0;i<size;i++) {
+			if(y[i] == 0) {
+				y[i] = 2;
+				return i;
+			}
+		}
+		return size;
+	}
+
 	private boolean conflict(int i,int j) {
-		if(x[i] || y[j] || d[i+j] || d[i-j+3*size-2])
+		if(d[i+j] || d[i-j+3*size-2])
 			return true;
 		return false;
 	}
 	
 	private void putdown(int i,int j) {
 		board[i][j] = 1;
-		x[i] = true;
-		y[j] = true;
+		y[j] = 1;
 		d[i+j] = true;
 		d[i-j+3*size-2] = true;
 	}
 	
 	private void pullback(int i,int j) {
 		board[i][j] = 0;
-		x[i] = false;
-		y[j] = false;
+		y[j] = 2;
 		d[i+j] = false;
 		d[i-j+3*size-2] = false;
 	}
 	
+	private void printBoard() {
+		for(int m=0;m<size;m++) {
+			for(int n=0;n<size;n++)
+				System.out.print(board[m][n]+" ");
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
 	public static void main(String[] args) {
-		Queens q = new Queens(8);
+		QueensNew q = new QueensNew(8);
 		q.solve();
 	}
 	

@@ -105,8 +105,11 @@ public class QueensAll {
 	
 	
 	public static void main(String[] args) {
-		QueensAll q = new QueensAll(8);
+	    long startTime = System.currentTimeMillis();
+		QueensAll q = new QueensAll(15);
 		q.solve();
+		long endTime = System.currentTimeMillis();
+		System.out.println("Time consumed: "+(endTime-startTime));
 	}
 	
 	

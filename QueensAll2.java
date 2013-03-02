@@ -72,7 +72,10 @@ public class QueensAll2 {
 	}
 	
 	public static void main(String[] args) {
-		QueensAll2 q = new QueensAll2(8);
+		long startTime = System.currentTimeMillis();
+		QueensAll2 q = new QueensAll2(15);
 		q.solve();
+		long endTime = System.currentTimeMillis();
+		System.out.println("Time consumed: "+(endTime-startTime));
 	}
 }
